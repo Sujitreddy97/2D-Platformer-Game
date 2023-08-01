@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System;
+
 
 public class Player_Controller : MonoBehaviour
 {
@@ -164,7 +161,7 @@ public class Player_Controller : MonoBehaviour
     void DelayGameoverPanel()
     {
         
-        gameOver_Controller.PlayerDied();
+        gameOver_Controller.GameOverPanel();
     }
 
 

@@ -6,16 +6,16 @@ using UnityEditor;
 public class GameOver_Controller : MonoBehaviour
 {
     [SerializeField] Button restartButton;
-    //[SerializeField] Button quitButton;
+    [SerializeField] Button mainMenuButton;
 
     private void Awake()
     {
         restartButton.onClick.AddListener(ReloadScene);
-        //quitButton.onClick.AddListener(QuitGame);
+        mainMenuButton.onClick.AddListener(MainMenu);
     }
 
-
-    public void PlayerDied()
+    //GameOver panel function is called at player controller
+    public void GameOverPanel()
     {
         gameObject.SetActive(true);
  
@@ -27,6 +27,13 @@ public class GameOver_Controller : MonoBehaviour
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.buildIndex);
     }
+
+    //Main menu function
+    void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 
     /*void QuitGame()
     {

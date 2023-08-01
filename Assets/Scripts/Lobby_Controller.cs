@@ -21,12 +21,6 @@ public class Lobby_Controller : MonoBehaviour
         Level_Selection.SetActive(true);
     }
 
-
-    void LevelMenu()
-    {
-        Level_Selection.SetActive(true);
-    }
-
     void QuitGame()
     {
         //Application.Quit();
