@@ -7,7 +7,7 @@ public class Level_Loader : MonoBehaviour
 {
     private Button button;
 
-    [SerializeField] string LevelName;
+    [SerializeField] private int LevelIndex;
 
 
     private void Awake()
@@ -16,8 +16,34 @@ public class Level_Loader : MonoBehaviour
         button.onClick.AddListener(OnClick);
     }
 
+    private void Start()
+    {
+        if (Level_Manager.Instance.GetLevelStatus(LevelIndex) == LevelStatus.Locked)
+            GetComponent<Image>().color = Color.grey;
+        else
+            GetComponent<Image>().color = Color.white;
+    }
+
+
     private void OnClick()
     {
-        SceneManager.LoadScene(LevelName);
+        LevelStatus levelStatus = Level_Manager.Instance.GetLevelStatus(LevelIndex);
+
+        switch (levelStatus)
+        {
+            case LevelStatus.Locked:
+                Debug.Log("Can't play this level till you unlock");
+                break;
+
+            case LevelStatus.Unlocked:
+                SceneManager.LoadScene(LevelIndex);
+                break;
+
+            case LevelStatus.Completed:
+                SceneManager.LoadScene(LevelIndex);
+                break;
+
+        }
+                
     }
 }
