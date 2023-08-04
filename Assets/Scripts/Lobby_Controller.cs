@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityEditor;
 
 public class Lobby_Controller : MonoBehaviour
 {
-    [SerializeField] Button playButton;
-    [SerializeField] Button quitButton;
-    [SerializeField] GameObject Level_Selection;
+    [SerializeField] private Button playButton;
+    [SerializeField] private Button quitButton;
+    [SerializeField] private GameObject Level_Selection;
 
     private void Awake()
     {
@@ -16,12 +15,12 @@ public class Lobby_Controller : MonoBehaviour
     }
 
 
-    void PlayGame()
+    private void PlayGame()
     {
         Level_Selection.SetActive(true);
     }
 
-    void QuitGame()
+    private void QuitGame()
     {
         //Application.Quit();
         EditorApplication.isPlaying = false;

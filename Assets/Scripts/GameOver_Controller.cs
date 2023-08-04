@@ -1,12 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 public class GameOver_Controller : MonoBehaviour
 {
-    [SerializeField] Button restartButton;
-    [SerializeField] Button mainMenuButton;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button mainMenuButton;
 
     private void Awake()
     {
@@ -14,22 +13,19 @@ public class GameOver_Controller : MonoBehaviour
         mainMenuButton.onClick.AddListener(MainMenu);
     }
 
-    //GameOver panel function is called at player controller
     public void GameOverPanel()
     {
         gameObject.SetActive(true);
  
     }
 
-    //Reload Function
-    void ReloadScene()
+    private void ReloadScene()
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.buildIndex);
     }
 
-    //Main menu function
-    void MainMenu()
+    private void MainMenu()
     {
         SceneManager.LoadScene(0);
     }

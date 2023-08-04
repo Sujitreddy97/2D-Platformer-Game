@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 public class Level_Manager : MonoBehaviour
 {
     private static Level_Manager instance;
+    private int defaultIndex = 0;
+    private int firstLevelIndex = 1;
     public static Level_Manager Instance { get { return instance; } }
 
     private void Awake()
@@ -21,35 +23,36 @@ public class Level_Manager : MonoBehaviour
 
     private void Start()
     {
-        if (GetLevelStatus("Level_01") == LevelStatus.Locked)
+        if (GetLevelStatus(firstLevelIndex) == LevelStatus.Locked)
         {
-            SetLevelStatus("Level_01", LevelStatus.Unlocked);
-        }
-    }
-
-    public void LoadAnyLevel(int levelNumber)
-    {
-        // Check if the level is unlocked.
-        LevelStatus levelStatus = GetLevelStatus(levelNumber.ToString());
-        if (levelStatus == LevelStatus.Unlocked)
-        {
-            // Load the level.
-            SceneManager.LoadScene(levelNumber);
+            SetLevelStatus(firstLevelIndex, LevelStatus.Unlocked);
         }
     }
 
 
-
-    //Get Level Status Function
-    public LevelStatus GetLevelStatus(string level)
+    public void SetLevelStatus(int level, LevelStatus levelStatus)
     {
-        LevelStatus levelStatus = (LevelStatus)PlayerPrefs.GetInt(level, 0);
+        PlayerPrefs.SetInt(level.ToString(), (int)levelStatus);
+    }
+
+
+    public LevelStatus GetLevelStatus(int level)
+    {
+        LevelStatus levelStatus = (LevelStatus)PlayerPrefs.GetInt(level.ToString(),defaultIndex);
         return levelStatus;
     }
 
-    //Set Level Status Function
-    public void SetLevelStatus(string level, LevelStatus levelStatus)
+    public void SetLevelComplete()
     {
-        PlayerPrefs.SetInt(level, (int)levelStatus);
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SetLevelStatus(currentScene, LevelStatus.Completed);
+
+        int nextScene = currentScene + 1;
+
+        if(GetLevelStatus(nextScene)==LevelStatus.Locked)
+        {
+            SetLevelStatus(nextScene, LevelStatus.Unlocked);
+        }
     }
+   
 }

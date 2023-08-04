@@ -4,30 +4,38 @@ using UnityEngine.UI;
 
 public class Player_Controller : MonoBehaviour
 {
-    [SerializeField] GameOver_Controller gameOver_Controller;
+    [SerializeField] private Pause_Game pauseGame_Controller;
 
-    [SerializeField] Animator animator;
+    [SerializeField] private GameOver_Controller gameOver_Controller;
 
-    [SerializeField] Score_Manager scoreManager;
+    [SerializeField] private Animator animator;
 
-    [SerializeField] float speed;
+    [SerializeField] private Score_Manager scoreManager;
 
-    [SerializeField] float jumpForce;
+    [SerializeField] private float speed;
 
-    [SerializeField] Transform startPosition;
+    [SerializeField] private float jumpForce;
 
-    [SerializeField] Camera mainCamera;
+    [SerializeField] private Transform startPosition;
 
-    [SerializeField] Image [] hearts;
+    [SerializeField] private Camera mainCamera;
 
-    bool isGrounded;
+    [SerializeField] private Image[] hearts;
 
-    Rigidbody2D rb;
+    [SerializeField] private float delayPlayerInvoke = 0.25f;
 
-    int lives = 3;
+    [SerializeField] private float delayGameOverPanel = 0.9f;
+
+
+    private bool isGrounded;
+
+    private Rigidbody2D rb;
+
+    private int lives = 3;
 
     public bool isAlive;
 
+    private bool isPaused = true;
 
     private void Awake()
     {
@@ -35,21 +43,39 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+
     void Update()
     {
 
         PlayerMovement();
+        PauseMenuUI();
     }
 
-    //Pick key function
+
     public void PickKey()
     {
         scoreManager.IncreaseScore(10);
     }
 
+    private void PauseMenuUI()
+    {
+        
+        if(Input.GetKeyDown(KeyCode.Escape) && isAlive)
+        {
+            if(!isPaused)
+            {
+                pauseGame_Controller.PauseGamePanel();
+                isPaused = true;
+            }
+            else if(isPaused)
+            {
+                pauseGame_Controller.ResumeGame();
+                isPaused = false;
+            }
+        }
+    }
 
-    //Player movement function
+
     private void PlayerMovement()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -62,64 +88,57 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    //Horizontal move
     private void HorizontalMove(float horizontal)
     {
         Vector3 position = transform.position;
         position.x += horizontal * speed * Time.deltaTime;
         transform.position = position;
 
-        //setting the speed parameter to animator
-        animator.SetFloat("Speed", Mathf.Abs(horizontal));
+        animator.SetFloat(Constants.animatior_Speed, Mathf.Abs(horizontal));
 
-        //Accessing the scale of the player
         Vector3 scale = transform.localScale;
 
-        //if speed < 0 flip the image in x-axis 
         if (horizontal < 0)
         {
             scale.x = -1f * Mathf.Abs(scale.x);
         }
-        else if (horizontal > 0) //If speed > 0 then keep the x-axis value positive
+        else if (horizontal > 0) 
         {
             scale.x = Mathf.Abs(scale.x);
         }
-        //Set the scale value
+
         transform.localScale = scale;
     }
 
-   
 
-    //Verticle move
     private void Jump(float vertical)
     {
         if (vertical > 0 && isGrounded)
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            animator.SetTrigger("Jump");
+            animator.SetTrigger(Constants.animatior_Jump);
             isGrounded = false;
         }
 
     }
 
-    //Crouch function
+
     private void Crouch()
     {
-        //Crouch
+
         if (Input.GetKeyDown(KeyCode.LeftControl) && isGrounded)
         {
-            //Set crouch animation
-            animator.SetBool("Crouch", true);
+  
+            animator.SetBool(Constants.animatior_Crouch, true);
         }
         else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            //Set crouch animation
-            animator.SetBool("Crouch", false);
+       
+            animator.SetBool(Constants.animatior_Crouch, false);
         }
 
     }
 
-    //Decrease Life
     public void DecreaseLife()
     {
         lives--;
@@ -131,41 +150,37 @@ public class Player_Controller : MonoBehaviour
         }
         else
         {
-            Invoke(nameof(PlayerInvoke), 0.25f);
+            Invoke(nameof(PlayerInvoke), delayPlayerInvoke);
         }
     }
 
-    //Delays the invoke of the player when player loses the life
+
     private void PlayerInvoke()
     {
         transform.position = startPosition.position;
     }
 
 
-    //Death Function
+
     public void playerDeath()
     {
         isAlive = false;
         
-        //Death Animation
-        animator.SetTrigger("Death");
+  
+        animator.SetTrigger(Constants.animatior_Death);
+        Invoke(nameof(DelayGameoverPanel), delayGameOverPanel);
 
-        //Displays the gameover image by calling PlayerDied function
-        Invoke(nameof(DelayGameoverPanel), 0.9f);
-
-        //Disable the player controller script
         this.enabled = false;
 
     }
 
-    void DelayGameoverPanel()
+    private void DelayGameoverPanel()
     {
         
         gameOver_Controller.GameOverPanel();
     }
 
 
-    //Handle Health UI function  
     private void HandleHealthUI()
     {
         for(int i = 0; i < hearts.Length; i++)
@@ -175,20 +190,19 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    //Collision enter check
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(Constants.Ground_Tag))
         {
             isGrounded = true;
             //Debug.Log("Grounded");
         }
     }
 
-    //Collision exit check
+
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(Constants.Ground_Tag))
         {
             //Debug.Log("not Grounded");
             isGrounded = false;

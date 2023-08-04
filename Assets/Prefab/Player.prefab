@@ -205,7 +205,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 15
+  m_Mass: 13
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2665488990a459439ba646004f025a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseGame_Controller: {fileID: 0}
   gameOver_Controller: {fileID: 0}
   animator: {fileID: 4084502259882650017}
   scoreManager: {fileID: 0}
@@ -263,4 +264,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  delayPlayerInvoke: 0.25
+  delayGameOverPanel: 0.9
   isAlive: 1
