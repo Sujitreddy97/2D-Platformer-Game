@@ -55,6 +55,7 @@ public class Player_Controller : MonoBehaviour
     public void PickKey()
     {
         scoreManager.IncreaseScore(10);
+        Sound_Manager.Instance.Play(SoundsName.KeyPickup);
     }
 
     private void PauseMenuUI()
@@ -66,11 +67,13 @@ public class Player_Controller : MonoBehaviour
             {
                 pauseGame_Controller.PauseGamePanel();
                 isPaused = true;
+                Sound_Manager.Instance.Play(SoundsName.ButtonClick);
             }
             else if(isPaused)
             {
                 pauseGame_Controller.ResumeGame();
                 isPaused = false;
+                Sound_Manager.Instance.Play(SoundsName.ButtonClick);
             }
         }
     }
@@ -101,12 +104,14 @@ public class Player_Controller : MonoBehaviour
         if (horizontal < 0)
         {
             scale.x = -1f * Mathf.Abs(scale.x);
+            //Sound_Manager.Instance.Play(SoundsName.PlayerMove);
         }
         else if (horizontal > 0) 
         {
             scale.x = Mathf.Abs(scale.x);
+            //Sound_Manager.Instance.Play(SoundsName.PlayerMove);
         }
-
+        
         transform.localScale = scale;
     }
 
@@ -118,6 +123,7 @@ public class Player_Controller : MonoBehaviour
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             animator.SetTrigger(Constants.animatior_Jump);
             isGrounded = false;
+            Sound_Manager.Instance.Play(SoundsName.PlayerJump);
         }
 
     }
@@ -169,7 +175,7 @@ public class Player_Controller : MonoBehaviour
   
         animator.SetTrigger(Constants.animatior_Death);
         Invoke(nameof(DelayGameoverPanel), delayGameOverPanel);
-
+        Sound_Manager.Instance.Play(SoundsName.PlayerDeath);
         this.enabled = false;
 
     }

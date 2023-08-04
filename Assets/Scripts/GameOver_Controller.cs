@@ -16,18 +16,19 @@ public class GameOver_Controller : MonoBehaviour
     public void GameOverPanel()
     {
         gameObject.SetActive(true);
- 
     }
 
     private void ReloadScene()
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.buildIndex);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 
     private void MainMenu()
     {
         SceneManager.LoadScene(0);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 
 

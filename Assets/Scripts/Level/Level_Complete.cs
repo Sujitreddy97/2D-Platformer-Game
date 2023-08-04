@@ -13,6 +13,7 @@ public class Level_Complete : MonoBehaviour
 
             Level_Manager.Instance.SetLevelComplete();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            Sound_Manager.Instance.Play(SoundsName.LevelComplete);
 
         }
     }

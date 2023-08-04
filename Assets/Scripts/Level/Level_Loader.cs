@@ -28,7 +28,7 @@ public class Level_Loader : MonoBehaviour
     private void OnClick()
     {
         LevelStatus levelStatus = Level_Manager.Instance.GetLevelStatus(LevelIndex);
-
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
         switch (levelStatus)
         {
             case LevelStatus.Locked:

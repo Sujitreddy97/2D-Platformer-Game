@@ -18,11 +18,13 @@ public class Lobby_Controller : MonoBehaviour
     private void PlayGame()
     {
         Level_Selection.SetActive(true);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 
     private void QuitGame()
     {
         //Application.Quit();
         EditorApplication.isPlaying = false;
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 }

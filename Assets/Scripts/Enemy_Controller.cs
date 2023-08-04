@@ -38,6 +38,7 @@ public class Enemy_Controller : MonoBehaviour
         {
 
            playerController.DecreaseLife();
+            Sound_Manager.Instance.Play(SoundsName.EnemyAttack);
            if(playerController.isAlive == false)
             {
                 speed = 0;

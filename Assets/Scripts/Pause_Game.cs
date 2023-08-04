@@ -15,6 +15,7 @@ public class Pause_Game : MonoBehaviour
     public void mainMenu()
     {
         SceneManager.LoadScene(0);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 
 
@@ -22,5 +23,6 @@ public class Pause_Game : MonoBehaviour
     {
         Time.timeScale = 1;
         gameObject.SetActive(false);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 }
