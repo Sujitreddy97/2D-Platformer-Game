@@ -12310,6 +12310,11 @@ PrefabInstance:
       propertyPath: pauseGame_Controller
       value: 
       objectReference: {fileID: 2106050312}
+    - target: {fileID: 516890692559079021, guid: ecdcbd70876d66047a2bae6e63206a19,
+        type: 3}
+      propertyPath: pickKeyParticleEffect
+      value: 
+      objectReference: {fileID: 8341228573510403503}
     - target: {fileID: 5422632287537787002, guid: ecdcbd70876d66047a2bae6e63206a19,
         type: 3}
       propertyPath: m_Name
@@ -12579,3 +12584,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a7c923a272bbfd409e36228d54d40a0, type: 3}
+--- !u!198 &8341228573510403503 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2003845508, guid: 6a7c923a272bbfd409e36228d54d40a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8341228573510403502}
+  m_PrefabAsset: {fileID: 0}

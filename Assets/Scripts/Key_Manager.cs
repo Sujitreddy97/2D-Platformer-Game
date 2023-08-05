@@ -8,10 +8,8 @@ public class Key_Manager : MonoBehaviour
 
         if (playerController != null)
         {
-            
             playerController.PickKey();
             Destroy(gameObject);
-
         }
     }
 }

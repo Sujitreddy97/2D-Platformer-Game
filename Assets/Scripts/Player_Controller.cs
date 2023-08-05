@@ -26,6 +26,10 @@ public class Player_Controller : MonoBehaviour
 
     [SerializeField] private float delayGameOverPanel = 0.9f;
 
+    [SerializeField] private ParticleSystem deathParticleEffect;
+
+    [SerializeField] private ParticleSystem spawnParticleEffect;
+
 
     private bool isGrounded;
 
@@ -157,6 +161,7 @@ public class Player_Controller : MonoBehaviour
         else
         {
             Invoke(nameof(PlayerInvoke), delayPlayerInvoke);
+            spawnParticleEffect.Play();
         }
     }
 
@@ -172,12 +177,12 @@ public class Player_Controller : MonoBehaviour
     {
         isAlive = false;
         
-  
         animator.SetTrigger(Constants.animatior_Death);
         Invoke(nameof(DelayGameoverPanel), delayGameOverPanel);
         Sound_Manager.Instance.Play(SoundsName.PlayerDeath);
         this.enabled = false;
 
+        deathParticleEffect.Play();
     }
 
     private void DelayGameoverPanel()
