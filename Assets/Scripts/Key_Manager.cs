@@ -12,4 +12,5 @@ public class Key_Manager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

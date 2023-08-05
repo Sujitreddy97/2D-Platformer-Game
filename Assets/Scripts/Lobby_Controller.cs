@@ -23,8 +23,11 @@ public class Lobby_Controller : MonoBehaviour
 
     private void QuitGame()
     {
-        //Application.Quit();
-        EditorApplication.isPlaying = false;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
         Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
 }

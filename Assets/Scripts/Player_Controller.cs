@@ -16,6 +16,8 @@ public class Player_Controller : MonoBehaviour
 
     [SerializeField] private float jumpForce;
 
+    [SerializeField] private float doubleJumpForce;
+
     [SerializeField] private Transform startPosition;
 
     [SerializeField] private Camera mainCamera;
@@ -32,6 +34,8 @@ public class Player_Controller : MonoBehaviour
 
 
     private bool isGrounded;
+
+    private bool doubleJumpUsed = false;
 
     private Rigidbody2D rb;
 
@@ -54,7 +58,6 @@ public class Player_Controller : MonoBehaviour
         PlayerMovement();
         PauseMenuUI();
     }
-
 
     public void PickKey()
     {
@@ -87,10 +90,7 @@ public class Player_Controller : MonoBehaviour
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         HorizontalMove(horizontal);
-
-        float vertical = Input.GetAxisRaw("Jump");
-        Jump(vertical);
-
+        Jump();
         Crouch();
     }
 
@@ -101,7 +101,7 @@ public class Player_Controller : MonoBehaviour
         position.x += horizontal * speed * Time.deltaTime;
         transform.position = position;
 
-        animator.SetFloat(Constants.animatior_Speed, Mathf.Abs(horizontal));
+        animator.SetFloat(Constants.animator_Speed, Mathf.Abs(horizontal));
 
         Vector3 scale = transform.localScale;
 
@@ -120,16 +120,25 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    private void Jump(float vertical)
+    private void Jump()
     {
-        if (vertical > 0 && isGrounded)
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            animator.SetTrigger(Constants.animatior_Jump);
+            animator.SetTrigger(Constants.animator_Jump);
             isGrounded = false;
-            Sound_Manager.Instance.Play(SoundsName.PlayerJump);
-        }
+            doubleJumpUsed = false;
 
+        }
+        else if(Input.GetKeyDown(KeyCode.Space) && !isGrounded && !doubleJumpUsed)
+        {
+            doubleJumpUsed = true;
+            rb.AddForce(new Vector2(0, doubleJumpForce), ForceMode2D.Impulse);
+            animator.SetTrigger(Constants.animator_Jump);
+            Debug.Log(doubleJumpUsed);
+
+        }
+        Sound_Manager.Instance.Play(SoundsName.PlayerJump);
     }
 
 
@@ -139,12 +148,12 @@ public class Player_Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftControl) && isGrounded)
         {
   
-            animator.SetBool(Constants.animatior_Crouch, true);
+            animator.SetBool(Constants.animator_Crouch, true);
         }
         else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
        
-            animator.SetBool(Constants.animatior_Crouch, false);
+            animator.SetBool(Constants.animator_Crouch, false);
         }
 
     }
@@ -177,7 +186,7 @@ public class Player_Controller : MonoBehaviour
     {
         isAlive = false;
         
-        animator.SetTrigger(Constants.animatior_Death);
+        animator.SetTrigger(Constants.animator_Death);
         Invoke(nameof(DelayGameoverPanel), delayGameOverPanel);
         Sound_Manager.Instance.Play(SoundsName.PlayerDeath);
         this.enabled = false;

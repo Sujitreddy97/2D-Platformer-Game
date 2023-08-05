@@ -6,6 +6,8 @@ public class Level_Manager : MonoBehaviour
     private static Level_Manager instance;
     private int defaultIndex = 0;
     private int firstLevelIndex = 1;
+
+
     public static Level_Manager Instance { get { return instance; } }
 
     private void Awake()
@@ -27,6 +29,7 @@ public class Level_Manager : MonoBehaviour
         {
             SetLevelStatus(firstLevelIndex, LevelStatus.Unlocked);
         }
+
     }
 
 
@@ -38,7 +41,7 @@ public class Level_Manager : MonoBehaviour
 
     public LevelStatus GetLevelStatus(int level)
     {
-        LevelStatus levelStatus = (LevelStatus)PlayerPrefs.GetInt(level.ToString(),defaultIndex);
+        LevelStatus levelStatus = (LevelStatus)PlayerPrefs.GetInt(level.ToString(), defaultIndex);
         return levelStatus;
     }
 
@@ -49,10 +52,22 @@ public class Level_Manager : MonoBehaviour
 
         int nextScene = currentScene + 1;
 
-        if(GetLevelStatus(nextScene)==LevelStatus.Locked)
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+
+        if (nextScene < totalScenes)
         {
-            SetLevelStatus(nextScene, LevelStatus.Unlocked);
+            if (GetLevelStatus(nextScene) == LevelStatus.Locked)
+            {
+                SetLevelStatus(nextScene, LevelStatus.Unlocked);
+            }
         }
+        else
+        {
+            SceneManager.LoadScene(defaultIndex);
+        }
+
+
+
     }
-   
+
 }
