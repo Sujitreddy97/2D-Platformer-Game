@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum SoundsName
@@ -22,8 +20,6 @@ public class SoundType
     public AudioClip soundClip;
 }
 
-
-
 public class Sound_Manager : MonoBehaviour
 {
     private static Sound_Manager instance;
@@ -31,10 +27,8 @@ public class Sound_Manager : MonoBehaviour
 
     [SerializeField] private AudioSource soundBGM;
     [SerializeField] private AudioSource soundSFX;
-
     [SerializeField] private SoundType[] Sounds;
-
-    
+   
     private void Awake()
     {
         if (instance == null)
@@ -65,7 +59,6 @@ public class Sound_Manager : MonoBehaviour
         }
 
     }
-
 
     public void Play(SoundsName sound)
     {
