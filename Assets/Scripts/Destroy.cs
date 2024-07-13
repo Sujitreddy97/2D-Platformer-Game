@@ -14,7 +14,8 @@ public class Destroy : MonoBehaviour
         if(playerController != null)
         {
 
-            playerController.DecreaseLife();  
+            playerController.DecreaseLife();
+            Sound_Manager.Instance.Play(SoundsName.EnemyAttack);
            
         }
     }

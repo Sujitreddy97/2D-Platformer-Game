@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Key_Manager : MonoBehaviour
@@ -10,10 +8,9 @@ public class Key_Manager : MonoBehaviour
 
         if (playerController != null)
         {
-            
             playerController.PickKey();
             Destroy(gameObject);
-
         }
     }
+
 }

@@ -1,36 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System;
+
 
 public class Player_Controller : MonoBehaviour
 {
-    [SerializeField] GameOver_Controller gameOver_Controller;
+    [SerializeField] private Pause_Game pauseGame_Controller;
 
-    [SerializeField] Animator animator;
+    [SerializeField] private GameOver_Controller gameOver_Controller;
 
-    [SerializeField] Score_Manager scoreManager;
+    [SerializeField] private Animator animator;
 
-    [SerializeField] float speed;
+    [SerializeField] private Score_Manager scoreManager;
 
-    [SerializeField] float jumpForce;
+    [SerializeField] private float speed;
 
-    [SerializeField] Transform startPosition;
+    [SerializeField] private float jumpForce;
 
-    [SerializeField] Camera mainCamera;
+    [SerializeField] private float doubleJumpForce;
 
-    [SerializeField] Image [] hearts;
+    [SerializeField] private Transform startPosition;
 
-    bool isGrounded;
+    [SerializeField] private Camera mainCamera;
 
-    Rigidbody2D rb;
+    [SerializeField] private Image[] hearts;
 
-    int lives = 3;
+    [SerializeField] private float delayPlayerInvoke = 0.25f;
+
+    [SerializeField] private float delayGameOverPanel = 0.9f;
+
+    [SerializeField] private ParticleSystem deathParticleEffect;
+
+    [SerializeField] private ParticleSystem spawnParticleEffect;
+
+
+    private bool isGrounded;
+
+    private bool doubleJumpUsed = false;
+
+    private Rigidbody2D rb;
+
+    private int lives = 3;
 
     public bool isAlive;
 
+    private bool isPaused = true;
 
     private void Awake()
     {
@@ -38,91 +51,113 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+
     void Update()
     {
 
         PlayerMovement();
+        PauseMenuUI();
     }
 
-    //Pick key function
     public void PickKey()
     {
         scoreManager.IncreaseScore(10);
+        Sound_Manager.Instance.Play(SoundsName.KeyPickup);
+    }
+
+    private void PauseMenuUI()
+    {
+        
+        if(Input.GetKeyDown(KeyCode.Escape) && isAlive)
+        {
+            if(!isPaused)
+            {
+                pauseGame_Controller.PauseGamePanel();
+                isPaused = true;
+                Sound_Manager.Instance.Play(SoundsName.ButtonClick);
+            }
+            else if(isPaused)
+            {
+                pauseGame_Controller.ResumeGame();
+                isPaused = false;
+                Sound_Manager.Instance.Play(SoundsName.ButtonClick);
+            }
+        }
     }
 
 
-    //Player movement function
     private void PlayerMovement()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         HorizontalMove(horizontal);
-
-        float vertical = Input.GetAxisRaw("Jump");
-        Jump(vertical);
-
+        Jump();
         Crouch();
     }
 
 
-    //Horizontal move
     private void HorizontalMove(float horizontal)
     {
         Vector3 position = transform.position;
         position.x += horizontal * speed * Time.deltaTime;
         transform.position = position;
 
-        //setting the speed parameter to animator
-        animator.SetFloat("Speed", Mathf.Abs(horizontal));
+        animator.SetFloat(Constants.animator_Speed, Mathf.Abs(horizontal));
 
-        //Accessing the scale of the player
         Vector3 scale = transform.localScale;
 
-        //if speed < 0 flip the image in x-axis 
         if (horizontal < 0)
         {
             scale.x = -1f * Mathf.Abs(scale.x);
+            //Sound_Manager.Instance.Play(SoundsName.PlayerMove);
         }
-        else if (horizontal > 0) //If speed > 0 then keep the x-axis value positive
+        else if (horizontal > 0) 
         {
             scale.x = Mathf.Abs(scale.x);
+            //Sound_Manager.Instance.Play(SoundsName.PlayerMove);
         }
-        //Set the scale value
+        
         transform.localScale = scale;
     }
 
-   
 
-    //Verticle move
-    private void Jump(float vertical)
+    private void Jump()
     {
-        if (vertical > 0 && isGrounded)
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            animator.SetTrigger("Jump");
+            animator.SetTrigger(Constants.animator_Jump);
             isGrounded = false;
-        }
+            doubleJumpUsed = false;
 
+        }
+        else if(Input.GetKeyDown(KeyCode.Space) && !isGrounded && !doubleJumpUsed)
+        {
+            doubleJumpUsed = true;
+            rb.AddForce(new Vector2(0, doubleJumpForce), ForceMode2D.Impulse);
+            animator.SetTrigger(Constants.animator_Jump);
+            Debug.Log(doubleJumpUsed);
+
+        }
+        Sound_Manager.Instance.Play(SoundsName.PlayerJump);
     }
 
-    //Crouch function
+
     private void Crouch()
     {
-        //Crouch
+
         if (Input.GetKeyDown(KeyCode.LeftControl) && isGrounded)
         {
-            //Set crouch animation
-            animator.SetBool("Crouch", true);
+  
+            animator.SetBool(Constants.animator_Crouch, true);
         }
         else if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            //Set crouch animation
-            animator.SetBool("Crouch", false);
+       
+            animator.SetBool(Constants.animator_Crouch, false);
         }
 
     }
 
-    //Decrease Life
     public void DecreaseLife()
     {
         lives--;
@@ -134,41 +169,38 @@ public class Player_Controller : MonoBehaviour
         }
         else
         {
-            Invoke(nameof(PlayerInvoke), 0.25f);
+            Invoke(nameof(PlayerInvoke), delayPlayerInvoke);
+            spawnParticleEffect.Play();
         }
     }
 
-    //Delays the invoke of the player when player loses the life
+
     private void PlayerInvoke()
     {
         transform.position = startPosition.position;
     }
 
 
-    //Death Function
+
     public void playerDeath()
     {
         isAlive = false;
         
-        //Death Animation
-        animator.SetTrigger("Death");
-
-        //Displays the gameover image by calling PlayerDied function
-        Invoke(nameof(DelayGameoverPanel), 0.9f);
-
-        //Disable the player controller script
+        animator.SetTrigger(Constants.animator_Death);
+        Invoke(nameof(DelayGameoverPanel), delayGameOverPanel);
+        Sound_Manager.Instance.Play(SoundsName.PlayerDeath);
         this.enabled = false;
 
+        deathParticleEffect.Play();
     }
 
-    void DelayGameoverPanel()
+    private void DelayGameoverPanel()
     {
         
-        gameOver_Controller.PlayerDied();
+        gameOver_Controller.GameOverPanel();
     }
 
 
-    //Handle Health UI function  
     private void HandleHealthUI()
     {
         for(int i = 0; i < hearts.Length; i++)
@@ -178,20 +210,19 @@ public class Player_Controller : MonoBehaviour
     }
 
 
-    //Collision enter check
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(Constants.Ground_Tag))
         {
             isGrounded = true;
             //Debug.Log("Grounded");
         }
     }
 
-    //Collision exit check
+
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(Constants.Ground_Tag))
         {
             //Debug.Log("not Grounded");
             isGrounded = false;

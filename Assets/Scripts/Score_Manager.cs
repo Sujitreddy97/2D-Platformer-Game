@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,8 +5,8 @@ using TMPro;
 public class Score_Manager : MonoBehaviour
 {
 
-    TMP_Text scoreText;
-    int score = 0;
+    private TMP_Text scoreText;
+    private int score = 0;
     private void Awake()
     {
         scoreText = GetComponent<TMP_Text>();
@@ -19,7 +17,6 @@ public class Score_Manager : MonoBehaviour
     {
         RefreshUI();
     }
-
 
     public void IncreaseScore(int increament)
     {

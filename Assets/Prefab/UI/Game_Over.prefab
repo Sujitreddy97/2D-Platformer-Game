@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   restartButton: {fileID: 1686740736215058451}
+  mainMenuButton: {fileID: 1686740736714388408}
 --- !u!1 &1686740735327871154
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,7 +461,6 @@ GameObject:
   - component: {fileID: 1686740736714388414}
   - component: {fileID: 1686740736714388409}
   - component: {fileID: 1686740736714388408}
-  - component: {fileID: 489779760149509743}
   m_Layer: 5
   m_Name: MainMenu_Button
   m_TagString: Untagged
@@ -572,19 +572,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &489779760149509743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1686740736714388410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc5cfc908e4c349429229ec1459bcfc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LevelName: Lobby
 --- !u!1 &1686740736825451017
 GameObject:
   m_ObjectHideFlags: 0

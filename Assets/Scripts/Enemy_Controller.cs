@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy_Controller : MonoBehaviour
 {
-    [SerializeField] float speed = 2f;
+    [SerializeField] private float speed = 2f;
     
-    [SerializeField] GameObject groundDetect;
+    [SerializeField] private GameObject groundDetect;
 
-    [SerializeField] float rayDistance;
+    [SerializeField] private float rayDistance;
 
-    int movingRight = 1;
+    private int movingRight = 1;
 
     void Update()
     {
@@ -18,8 +16,7 @@ public class Enemy_Controller : MonoBehaviour
     }
 
 
-    //Enemy Horizonatl movemet
-    void EnemyHorizontalMovemet()
+    private void EnemyHorizontalMovemet()
     {
         transform.Translate(movingRight * Vector2.right * speed * Time.deltaTime);
 
@@ -32,7 +29,7 @@ public class Enemy_Controller : MonoBehaviour
         }
     }
 
-    //Player Death animation after dying
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Player_Controller playerController = collision.gameObject.GetComponent<Player_Controller>();
@@ -41,6 +38,7 @@ public class Enemy_Controller : MonoBehaviour
         {
 
            playerController.DecreaseLife();
+            Sound_Manager.Instance.Play(SoundsName.EnemyAttack);
            if(playerController.isAlive == false)
             {
                 speed = 0;

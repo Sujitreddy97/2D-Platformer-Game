@@ -1,32 +1,36 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 public class GameOver_Controller : MonoBehaviour
 {
-    [SerializeField] Button restartButton;
-    //[SerializeField] Button quitButton;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button mainMenuButton;
 
     private void Awake()
     {
         restartButton.onClick.AddListener(ReloadScene);
-        //quitButton.onClick.AddListener(QuitGame);
+        mainMenuButton.onClick.AddListener(MainMenu);
     }
 
-
-    public void PlayerDied()
+    public void GameOverPanel()
     {
         gameObject.SetActive(true);
- 
     }
 
-    //Reload Function
-    void ReloadScene()
+    private void ReloadScene()
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.buildIndex);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
     }
+
+    private void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+        Sound_Manager.Instance.Play(SoundsName.ButtonClick);
+    }
+
 
     /*void QuitGame()
     {
